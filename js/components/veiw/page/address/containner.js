@@ -1,7 +1,10 @@
 var React = require('react');
 
 var AddressStore = require('../../../store/addressStore.js');
+var AddressList = require('./addresslist.js');
 
+var Link = require('react-router').Link;
+ 
 var Address =  React.createClass({
     getInitialState:function(){
         return  {
@@ -9,14 +12,18 @@ var Address =  React.createClass({
             list:[]
         };        
     },
+    componentDidMount: function(){
+        if(this.state.text){
+            AddressStore.getJson(this.state.text, this, true);  
+        }
+    },
     change:function(event){
         this.setState({
             text: event.target.value
         })   
     },
     click:function(){
-       AddressStore.getJson(this);
-       console.log(this.state.list)
+       AddressStore.getJson(this.state.text,this);
     },
     render:function() {
         return (
@@ -31,6 +38,11 @@ var Address =  React.createClass({
 	            	  </label>
 	            	  <button className="button button-full button-positive" onClick={this.click}>搜索</button>
             	</div>
+                <div className="list addresslist">
+                    <div className="listwrap" data={this.state.list}>
+                        <AddressList data={this.state.list}></AddressList>
+                    </div>
+                </div>
             </div>
         )
     }

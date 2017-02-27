@@ -13,6 +13,7 @@
 	})();
 var React = require('react'); 
 var render = require('react-dom').render;
+var pubsub = require('../lib/pubsub.js'); //引入发布订阅模块
 
 import Home from '../components/veiw/page/home/containner.js';
 import Address from '../components/veiw/page/address/containner.js';
@@ -25,15 +26,18 @@ var Route = require('react-router').Route; //子路由组件
 var hashHistory = require('react-router').hashHistory; //监听hash值的改变
 var browserHistory = require('react-router').browserHistory; //
 var IndexRoute = require('react-router').IndexRoute; //s
-
-render((
-    <Router history={browserHistory}>
+function renders(){
+	render((
+    <Router history={hashHistory}>
     	<Route path="/" component={Home}>
-    		<IndexRoute to="/" activeClassName="active" component={Address}/>
+    		<IndexRoute to="/" component={Address}/>
 	    	<Route path="/address" component={Address}/>
-	    	<Route path="/rlist" component={Rlist}/>
-	    	<Route path="/rsearch" component={Rsearch}/>
+	    	<Route path="/rlist/:geohash" component={Rlist}/>
+	    	<Route path="/rsearch/:geohash" component={Rsearch}/>
 	    	<Route path="/cartlist" component={CartList}/>
 	    </Route>
      </Router>
-        ), document.getElementById('app'));    
+        ), document.getElementById('app'));    	 	
+}
+renders();
+pubsub.subscribe('ele/render', renders);
